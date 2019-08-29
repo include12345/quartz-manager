@@ -1,0 +1,64 @@
+spring:
+    batch:
+        job:
+            enabled: false
+    datasource:
+        manage:
+            driver-class-name: com.mysql.jdbc.Driver
+            initialSize: 5
+            maxActive: 30
+            maxPoolPreparedStatementPerConnectionSize: 20
+            maxWait: 60000
+            minEvictableIdleTimeMillis: 300000
+            minIdle: 5
+            password: Include_123456
+            poolPreparedStatements: false
+            testOnBorrow: false
+            testOnReturn: false
+            testWhileIdle: true
+            timeBetweenEvictionRunsMillis: 60000
+            url: jdbc:mysql://129.28.192.214:3306/batch?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=PRC&useSSL=false
+            username: root
+            validationQuery: SELECT 'x'
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL5Dialect
+                format_sql: true
+                hbm2ddl:
+                    auto: none
+        show-sql: true
+    quartz:
+        # quartz 相关属性配置
+        properties:
+          org:
+            quartz:
+              scheduler:
+                instanceName: clusteredScheduler
+                instanceId: AUTO
+              jobStore:
+                class: org.quartz.impl.jdbcjobstore.JobStoreTX
+                driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+                tablePrefix: QRTZ_
+                isClustered: true
+                clusterCheckinInterval: 10000
+                useProperties: false
+              threadPool:
+                class: org.quartz.simpl.SimpleThreadPool
+                threadCount: 10
+                threadPriority: 5
+                threadsInheritContextClassLoaderOfInitializingThread: true
+        #数据库方式
+        job-store-type: jdbc
+
+        #kafka相关配置
+    kafka:
+        bootstrap-servers: 129.28.192.214:9092
+        registry-servers: 129.28.192.214:8081
+        #设置一个默认组
+        consumer:
+          group-id: quartz-manager
+        producer:
+          group-id: quartz-manager
+        topics:
+          quartz-manager: events.quartz-service.status
